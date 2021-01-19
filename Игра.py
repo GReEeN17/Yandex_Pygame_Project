@@ -115,47 +115,6 @@ def create_blocks():
                           ['blue', 'yellow', 'green', 'orange', 'purple', ]))))
 
 
-def level_1_arrangement():
-    for i in range(6):
-        for j in range(10):
-            if i == 0 or i == 1:
-                color = pygame.Color('white')
-            elif i == 2 or i == 3:
-                color = pygame.Color('blue')
-            else:
-                color = pygame.Color('red')
-            Block(12 + 100 * j, 10 + 50 * i, block_width, block_height, color)
-
-
-def level_2_arrangement():
-    for i in range(6):
-        for j in range(10):
-            if (i == 1 and j == 1) or (i == 2 and j == 1) or (i == 1 and j == 2) or (i == 2 and j == 2):
-                color = pygame.Color('yellow')
-            else:
-                color = pygame.Color('red')
-            Block(12 + 100 * j, 10 + 50 * i, block_width, block_height, color)
-
-
-def level_3_arrangement():
-    for i in range(6):
-        for j in range(10):
-            if (i == 0 and j == 0) or (i == 0 and j == 2) or (i == 1 and j == 1) or (i == 2 and j == 0)\
-                    or (i == 2 and j == 2):
-                color = pygame.Color('blue')
-            elif (i == 0 and j == 1) or (i == 1 and j == 0) or (i == 1 and j == 2) or (i == 2 and j == 1):
-                color = pygame.Color('white')
-            elif (i == 0 or i == 2) and (j != 0 and j != 1 and j != 2):
-                color = pygame.Color('white')
-            elif i == 1 and (j != 0 and j != 1 and j != 2):
-                color = pygame.Color('red')
-            elif i == 4:
-                color = pygame.Color('white')
-            else:
-                color = pygame.Color('red')
-            Block(12 + 100 * j, 10 + 50 * i, block_width, block_height, color)
-
-
 class Ball(pygame.sprite.Sprite):
     def __init__(self, x, y):
         global radius
@@ -282,9 +241,8 @@ def game():
     global running, flying, motion, x_ball, y_ball, x_platform, y_platform
     show_menu()
     game_background = pygame.image.load('fon_game.png')
-    level_2_arrangement()
-    '''random_generate()
-    create_blocks()'''
+    random_generate()
+    create_blocks()
     while running:
         clock.tick(FPS)
         for event in pygame.event.get():
@@ -316,9 +274,8 @@ def game():
                 if event.key == pygame.K_p:
                     pause()
         if (kol_hits == kol_blocks) and (y_ball > 10 + (50 * 5)):
-            #level_1_arrangement()
-            '''random_generate()
-            create_blocks()'''
+            random_generate()
+            create_blocks()
         if motion == 'LEFT' and x_platform >= 15:
             x_platform -= platform_speed
             platform.rect = platform.rect.move(-platform_speed, 0)
