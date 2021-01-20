@@ -23,9 +23,19 @@ image = pygame.transform.scale(image, (block_height, block_height))
 clock = pygame.time.Clock()
 all_sprites = pygame.sprite.Group()
 screen = pygame.display.set_mode(size)
+sound1 = pygame.mixer.Sound('hit.wav')
+sound1.set_volume(0.5)
 sound2 = pygame.mixer.Sound('click.mp3')
+sound2.set_volume(0.5)
+sound3 = pygame.mixer.Sound('lose.wav')
+sound3.set_volume(0.5)
+sound4 = pygame.mixer.Sound('hit2.wav')
+sound4.set_volume(0.3)
+pygame.mixer.music.load('music.mp3')
+pygame.mixer.music.set_volume(0.01)
 con = sqlite3.connect('pygame.db')
 spis_of_scores = []
+number_of_additions = 0
 
 
 def print_text(message, x, y, font_color=(0, 0, 0), font_type='PingPong.ttf', font_size=30):
@@ -55,8 +65,8 @@ class Button:
         self.inactive_color = (17, 132, 7)
         self.active_color = (42, 184, 29)
 
-    def draw(self, x, y, text, action=None, font_size=30):
-        global show, running, show_statistics
+    def draw(self, x, y, text='', action=None, font_size=30):
+        global show, running, show_selec, show_statistics
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
         if x < mouse[0] < x + self.width and y < mouse[1] < y + self.height:
@@ -68,35 +78,17 @@ class Button:
                     if action == quit:
                         pygame.quit()
                         quit()
-                    elif action == 'statistics':
+                    elif action == show_selector:
+                        show_selec = True
+                        show_selector()
+                    elif action == statistics:
                         show_statistics = True
                         show = False
-                    elif action == 'play':
-                        show = False
-                        running = True
                     else:
                         action()
         else:
             pygame.draw.rect(screen, self.inactive_color, (x, y, self.width, self.height))
         print_text(message=text, x=x + 10, y=y + 10, font_size=font_size)
-
-
-def show_menu():
-    global show
-    menu_background = pygame.image.load('fon.jpg')
-    start_btn = Button(288, 70)
-    quit_btn = Button(120, 70)
-    statistics_btn = Button(250, 70)
-    while show:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-        screen.blit(menu_background, (0, 0))
-        statistics_btn.draw(390, 400, 'Statistics', 'statistics', 50)
-        start_btn.draw(370, 300, 'Start game', 'play', 50)
-        quit_btn.draw(450, 500, 'Quit', quit, 50)
-        pygame.display.update()
 
 
 def statistics():
@@ -128,6 +120,80 @@ def statistics():
         pygame.display.flip()
 
 
+def show_menu():
+    global show
+    menu_background = pygame.image.load('fon.jpg')
+    start_btn = Button(288, 70)
+    quit_btn = Button(120, 70)
+    statistics_btn = Button(250, 70)
+    while show:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+        screen.blit(menu_background, (0, 0))
+        statistics_btn.draw(390, 400, 'Statistics', statistics, 50)
+        start_btn.draw(370, 300, 'Start game', show_selector, 50)
+        quit_btn.draw(450, 500, 'Quit', quit, 50)
+        pygame.display.update()
+
+
+def show_selector():
+    global show_selec
+    menu_background = pygame.image.load('fon.jpg')
+    lvl1_btn = Button(150, 150)
+    lvl1_image = pygame.transform.scale(pygame.image.load('lvl1.png'), (150, 150))
+    lvl2_btn = Button(150, 150)
+    lvl2_image = pygame.transform.scale(pygame.image.load('lvl2.png'), (150, 150))
+    lvl3_btn = Button(150, 150)
+    lvl3_image = pygame.transform.scale(pygame.image.load('lvl3.png'), (150, 150))
+    lvl4_btn = Button(150, 150)
+    lvl4_image = pygame.transform.scale(pygame.image.load('lvl4.png'), (150, 150))
+    lvl5_btn = Button(150, 150)
+    lvl5_image = pygame.transform.scale(pygame.image.load('lvl5.png'), (150, 150))
+    lvl6_btn = Button(150, 150)
+    lvl6_image = pygame.transform.scale(pygame.image.load('lvl6.png'), (150, 150))
+    lvl7_btn = Button(150, 150)
+    lvl7_image = pygame.transform.scale(pygame.image.load('lvl7.png'), (150, 150))
+    lvl8_btn = Button(150, 150)
+    lvl8_image = pygame.transform.scale(pygame.image.load('lvl8.png'), (150, 150))
+    lvl9_btn = Button(150, 150)
+    lvl9_image = pygame.transform.scale(pygame.image.load('lvl9.png'), (150, 150))
+    lvl10_btn = Button(150, 150)
+    lvl10_image = pygame.transform.scale(pygame.image.load('lvl10.png'), (150, 150))
+    randomlvl_btn = Button(125, 50)
+    return_btn = Button(125, 50)
+    while show_selec:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+        screen.blit(menu_background, (0, 0))
+        lvl1_btn.draw(12, 10, action=level_1_arrangement)
+        screen.blit(lvl1_image, (12, 10))
+        lvl2_btn.draw(212, 10, action=level_2_arrangement)
+        screen.blit(lvl2_image, (212, 10))
+        lvl3_btn.draw(412, 10, action=level_3_arrangement)
+        screen.blit(lvl3_image, (412, 10))
+        lvl4_btn.draw(612, 10, action=level_4_arrangement)
+        screen.blit(lvl4_image, (612, 10))
+        lvl5_btn.draw(812, 10, action=level_5_arrangement)
+        screen.blit(lvl5_image, (812, 10))
+        lvl6_btn.draw(12, 210, action=level_6_arrangement)
+        screen.blit(lvl6_image, (12, 210))
+        lvl7_btn.draw(212, 210, action=level_7_arrangement)
+        screen.blit(lvl7_image, (212, 210))
+        lvl8_btn.draw(412, 210, action=level_8_arrangement)
+        screen.blit(lvl8_image, (412, 210))
+        lvl9_btn.draw(612, 210, action=level_9_arrangement)
+        screen.blit(lvl9_image, (612, 210))
+        lvl10_btn.draw(812, 210, action=level_10_arrangement)
+        screen.blit(lvl10_image, (812, 210))
+        randomlvl_btn.draw(12, 410, text='Random', action=create_blocks)
+        return_btn.draw(12, 660, text='Back', action=show_menu)
+        pygame.display.update()
+
+
 def random_addition(button, x, y):
     list_of_buttons.append(button)
     x = x + block_width // 2 - block_height // 2
@@ -136,7 +202,10 @@ def random_addition(button, x, y):
 
 
 def random_generate():
-    global location, kol_hits, kol_blocks
+    global location, kol_hits, kol_blocks, show_selec, running, show
+    show_selec = False
+    running = True
+    show = False
     kol_hits = 0
     kol_blocks = 0
     location = []
@@ -152,7 +221,9 @@ def random_generate():
 
 
 def create_blocks():
-    global kol_blocks
+    global kol_blocks, number_of_additions
+    number_of_additions = 0
+    random_generate()
     for i in range(len(location)):
         for j in range(len(location[0])):
             if location[i][j] == 1:
@@ -202,6 +273,10 @@ def reset_parameters_for_additions():
 
 
 def level_1_arrangement():
+    global show_selec, running, show, kol_blocks, kol_hits, number_of_additions
+    show_selec = False
+    running = True
+    show = False
     number_of_additions = 1
     for i in range(6):
         for j in range(10):
@@ -212,12 +287,17 @@ def level_1_arrangement():
             else:
                 color = pygame.Color('red')
             bl = Block(12 + 100 * j, 10 + 50 * i, block_width, block_height, color)
+            kol_blocks += 1
             if addition_yes_or_no(number_of_additions):
                 number_of_additions -= 1
                 random_addition(bl, 12 + 100 * j, 10 + 50 * i)
 
 
 def level_2_arrangement():
+    global show_selec, running, show, kol_blocks, kol_hits, number_of_additions
+    show_selec = False
+    running = True
+    show = False
     number_of_additions = 2
     for i in range(6):
         for j in range(10):
@@ -226,16 +306,21 @@ def level_2_arrangement():
             else:
                 color = pygame.Color('red')
             bl = Block(12 + 100 * j, 10 + 50 * i, block_width, block_height, color)
+            kol_blocks += 1
             if addition_yes_or_no(number_of_additions):
                 number_of_additions -= 1
                 random_addition(bl, 12 + 100 * j, 10 + 50 * i)
 
 
 def level_3_arrangement():
+    global show_selec, running, show, kol_blocks, kol_hits, number_of_additions
+    show_selec = False
+    running = True
+    show = False
     number_of_additions = 3
     for i in range(6):
         for j in range(10):
-            if (i == 0 and j == 0) or (i == 0 and j == 2) or (i == 1 and j == 1) or (i == 2 and j == 0)\
+            if (i == 0 and j == 0) or (i == 0 and j == 2) or (i == 1 and j == 1) or (i == 2 and j == 0) \
                     or (i == 2 and j == 2):
                 color = pygame.Color('blue')
             elif (i == 0 and j == 1) or (i == 1 and j == 0) or (i == 1 and j == 2) or (i == 2 and j == 1):
@@ -249,12 +334,17 @@ def level_3_arrangement():
             else:
                 color = pygame.Color('red')
             bl = Block(12 + 100 * j, 10 + 50 * i, block_width, block_height, color)
+            kol_blocks += 1
             if addition_yes_or_no(number_of_additions):
                 number_of_additions -= 1
                 random_addition(bl, 12 + 100 * j, 10 + 50 * i)
 
 
 def level_4_arrangement():
+    global show_selec, running, show, kol_blocks, kol_hits, number_of_additions
+    show_selec = False
+    running = True
+    show = False
     number_of_additions = 4
     for i in range(6):
         for j in range(10):
@@ -265,12 +355,17 @@ def level_4_arrangement():
             else:
                 color = pygame.Color('red')
             bl = Block(12 + 100 * j, 10 + 50 * i, block_width, block_height, color)
+            kol_blocks += 1
             if addition_yes_or_no(number_of_additions):
                 number_of_additions -= 1
                 random_addition(bl, 12 + 100 * j, 10 + 50 * i)
 
 
 def level_5_arrangement():
+    global show_selec, running, show, kol_blocks, kol_hits, number_of_additions
+    show_selec = False
+    running = True
+    show = False
     number_of_additions = 5
     for i in range(6):
         for j in range(10):
@@ -281,12 +376,17 @@ def level_5_arrangement():
             else:
                 color = pygame.Color('yellow')
             bl = Block(12 + 100 * j, 10 + 50 * i, block_width, block_height, color)
+            kol_blocks += 1
             if addition_yes_or_no(number_of_additions):
                 number_of_additions -= 1
                 random_addition(bl, 12 + 100 * j, 10 + 50 * i)
 
 
 def level_6_arrangement():
+    global show_selec, running, show, kol_blocks, kol_hits, number_of_additions
+    show_selec = False
+    running = True
+    show = False
     number_of_additions = 6
     for i in range(6):
         for j in range(10):
@@ -299,12 +399,17 @@ def level_6_arrangement():
             else:
                 color = pygame.Color('yellow')
             bl = Block(12 + 100 * j, 10 + 50 * i, block_width, block_height, color)
+            kol_blocks += 1
             if addition_yes_or_no(number_of_additions):
                 number_of_additions -= 1
                 random_addition(bl, 12 + 100 * j, 10 + 50 * i)
 
 
 def level_7_arrangement():
+    global show_selec, running, show, kol_blocks, kol_hits, number_of_additions
+    show_selec = False
+    running = True
+    show = False
     number_of_additions = 7
     for i in range(6):
         for j in range(10):
@@ -315,12 +420,17 @@ def level_7_arrangement():
             else:
                 color = pygame.Color('orange')
             bl = Block(12 + 100 * j, 10 + 50 * i, block_width, block_height, color)
+            kol_blocks += 1
             if addition_yes_or_no(number_of_additions):
                 number_of_additions -= 1
                 random_addition(bl, 12 + 100 * j, 10 + 50 * i)
 
 
 def level_8_arrangement():
+    global show_selec, running, show, kol_blocks, kol_hits, number_of_additions
+    show_selec = False
+    running = True
+    show = False
     number_of_additions = 8
     for i in range(6):
         for j in range(10):
@@ -331,12 +441,17 @@ def level_8_arrangement():
             else:
                 color = pygame.Color('red')
             bl = Block(12 + 100 * j, 10 + 50 * i, block_width, block_height, color)
+            kol_blocks += 1
             if addition_yes_or_no(number_of_additions):
                 number_of_additions -= 1
                 random_addition(bl, 12 + 100 * j, 10 + 50 * i)
 
 
 def level_9_arrangement():
+    global show_selec, running, show, kol_blocks, kol_hits, number_of_additions
+    show_selec = False
+    running = True
+    show = False
     number_of_additions = 9
     for i in range(6):
         for j in range(10):
@@ -345,12 +460,17 @@ def level_9_arrangement():
             else:
                 color = pygame.Color('red')
             bl = Block(12 + 100 * j, 10 + 50 * i, block_width, block_height, color)
+            kol_blocks += 1
             if addition_yes_or_no(number_of_additions):
                 number_of_additions -= 1
                 random_addition(bl, 12 + 100 * j, 10 + 50 * i)
 
 
 def level_10_arrangement():
+    global show_selec, running, show, kol_blocks, kol_hits, number_of_additions
+    show_selec = False
+    running = True
+    show = False
     number_of_additions = 10
     for i in range(6):
         for j in range(10):
@@ -361,6 +481,7 @@ def level_10_arrangement():
             else:
                 color = pygame.Color('green')
             bl = Block(12 + 100 * j, 10 + 50 * i, block_width, block_height, color)
+            kol_blocks += 1
             if addition_yes_or_no(number_of_additions):
                 number_of_additions -= 1
                 random_addition(bl, 12 + 100 * j, 10 + 50 * i)
@@ -410,10 +531,13 @@ class Ball(pygame.sprite.Sprite):
             y_ball += self.vy
             self.rect = self.rect.move(self.vx, self.vy)
             if pygame.sprite.spritecollideany(self, horizontal_borders):
+                sound1.play()
                 self.vy = -self.vy
             if pygame.sprite.spritecollideany(self, vertical_borders):
+                sound1.play()
                 self.vx = -self.vx
             if pygame.sprite.spritecollideany(self, platforms):
+                sound4.play()
                 if x_ball - x_platform <= platform_width // 2:
                     self.vx = -2
                 else:
@@ -421,21 +545,22 @@ class Ball(pygame.sprite.Sprite):
                 self.vy = -self.vy
             hits = pygame.sprite.spritecollide(self, blocks, True)
             if hits:
+                sound1.play()
                 kol_hits += 1
                 if hits[0] in list_of_buttons:
                     addition = list_of_additions[list_of_buttons.index(hits[0])]
                     addition.dropping = True
-                if hits[0].x1 - abs(self.vx) <= x_ball <= hits[0].x1 + abs(self.vx) or hits[0].x1 + block_width\
+                if hits[0].x1 - abs(self.vx) <= x_ball <= hits[0].x1 + abs(self.vx) or hits[0].x1 + block_width \
                         - abs(self.vx) <= x_ball <= hits[0].x1 + block_width + abs(self.vx):
                     self.vx = -self.vx
-                elif hits[0].x1 - abs(self.vx) <= x_ball + 2 * radius <= hits[0].x1 + abs(self.vx) or hits[0].x1\
+                elif hits[0].x1 - abs(self.vx) <= x_ball + 2 * radius <= hits[0].x1 + abs(self.vx) or hits[0].x1 \
                         + block_width - abs(self.vx) <= x_ball + 2 * radius <= hits[0].x1 + block_width + abs(self.vx):
                     self.vx = -self.vx
-                elif hits[0].y1 - abs(self.vy) <= y_ball <= hits[0].y1 + abs(self.vy) or hits[0].y1\
+                elif hits[0].y1 - abs(self.vy) <= y_ball <= hits[0].y1 + abs(self.vy) or hits[0].y1 \
                         + block_height - abs(self.vy) <= y_ball <= hits[0].y1 + block_height + abs(self.vy):
                     self.vy = -self.vy
-                elif hits[0].y1 - abs(self.vy) <= y_ball + 2 * radius <= hits[0].y1 + abs(self.vy) or hits[0].y1\
-                        + block_height - abs(self.vy) <= y_ball + 2 * radius <= hits[0].y1\
+                elif hits[0].y1 - abs(self.vy) <= y_ball + 2 * radius <= hits[0].y1 + abs(self.vy) or hits[0].y1 \
+                        + block_height - abs(self.vy) <= y_ball + 2 * radius <= hits[0].y1 \
                         + block_height + abs(self.vy):
                     self.vy = -self.vy
                 points += 10
@@ -518,12 +643,10 @@ def game_over():
 
 def game():
     global running, flying, motion, x_ball, y_ball, x_platform, y_platform
+    pygame.mixer.music.play(loops=999)
     show_menu()
     statistics()
     game_background = pygame.image.load('fon_game.png')
-    level_10_arrangement()
-    '''random_generate()
-    create_blocks()'''
     while running:
         clock.tick(FPS)
         for event in pygame.event.get():
@@ -555,9 +678,26 @@ def game():
                 if event.key == pygame.K_p:
                     pause()
         if (kol_hits == kol_blocks) and (y_ball > 10 + (50 * 5)):
-            #level_1_arrangement()
-            '''random_generate()
-            create_blocks()'''
+            if number_of_additions == 1:
+                level_2_arrangement()
+            if number_of_additions == 2:
+                level_3_arrangement()
+            if number_of_additions == 3:
+                level_4_arrangement()
+            if number_of_additions == 4:
+                level_5_arrangement()
+            if number_of_additions == 5:
+                level_6_arrangement()
+            if number_of_additions == 6:
+                level_7_arrangement()
+            if number_of_additions == 7:
+                level_8_arrangement()
+            if number_of_additions == 8:
+                level_9_arrangement()
+            if number_of_additions == 9:
+                level_10_arrangement()
+            if number_of_additions == 10 or number_of_additions == 0:
+                create_blocks()
         if motion == 'LEFT' and x_platform >= 15:
             x_platform -= platform_speed
             platform.rect = platform.rect.move(-platform_speed, 0)
@@ -571,6 +711,7 @@ def game():
                 x_ball += platform_speed
                 ball.rect = ball.rect.move(platform_speed, 0)
         if y_ball >= HEIGHT - 99:
+            sound3.play()
             running = False
             game_over()
         screen.blit(game_background, (0, 0))
@@ -597,8 +738,9 @@ while running_program:
     platform = Platform(x_platform, y_platform, platform_width, platform_height)
     running = False
     show = True
-    flying = False
+    show_selec = False
     show_statistics = False
+    flying = False
     location = []
     kol_hits = 0
     kol_blocks = 0
