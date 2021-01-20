@@ -1,5 +1,6 @@
 import pygame
 import random
+import sqlite3
 
 WIDTH = 1024
 HEIGHT = 720
@@ -23,6 +24,8 @@ clock = pygame.time.Clock()
 all_sprites = pygame.sprite.Group()
 screen = pygame.display.set_mode(size)
 sound2 = pygame.mixer.Sound('click.mp3')
+con = sqlite3.connect('pygame.db')
+spis_of_scores = []
 
 
 def print_text(message, x, y, font_color=(0, 0, 0), font_type='PingPong.ttf', font_size=30):
@@ -53,7 +56,7 @@ class Button:
         self.active_color = (42, 184, 29)
 
     def draw(self, x, y, text, action=None, font_size=30):
-        global show, running
+        global show, running, show_statistics
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
         if x < mouse[0] < x + self.width and y < mouse[1] < y + self.height:
@@ -65,6 +68,9 @@ class Button:
                     if action == quit:
                         pygame.quit()
                         quit()
+                    elif action == 'statistics':
+                        show_statistics = True
+                        show = False
                     elif action == 'play':
                         show = False
                         running = True
@@ -87,10 +93,39 @@ def show_menu():
                 pygame.quit()
                 quit()
         screen.blit(menu_background, (0, 0))
-        statistics_btn.draw(390, 400, 'Statistics', None, 50)
+        statistics_btn.draw(390, 400, 'Statistics', 'statistics', 50)
         start_btn.draw(370, 300, 'Start game', 'play', 50)
         quit_btn.draw(450, 500, 'Quit', quit, 50)
         pygame.display.update()
+
+
+def statistics():
+    global show_statistics, show
+    screen.fill((0, 0, 0))
+    x, y = WIDTH // 3, HEIGHT // 5
+    color = pygame.Color(255, 255, 255)
+    while show_statistics:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                show_statistics = False
+                show = True
+        screen.fill((0, 0, 0))
+        for i in range(4):
+            pygame.draw.line(screen, color, (0, (i + 1) * y), (WIDTH, (i + 1) * y), 1)
+        for i in range(3):
+            pygame.draw.line(screen, color, ((i + 1) * x, 0), ((i + 1) * x, HEIGHT), 1)
+        res = con.cursor().execute('SELECT * FROM records').fetchall()
+        kol = 1
+        for i in res:
+            if kol > 5:
+                break
+            j = 0
+            for k in i:
+                k = str(k)
+                print_text(k, j * x, (kol - 1) * y, (17, 132, 7), font_size=100)
+                j += 1
+            kol += 1
+        pygame.display.flip()
 
 
 def random_addition(button, x, y):
@@ -484,6 +519,7 @@ def game_over():
 def game():
     global running, flying, motion, x_ball, y_ball, x_platform, y_platform
     show_menu()
+    statistics()
     game_background = pygame.image.load('fon_game.png')
     level_10_arrangement()
     '''random_generate()
@@ -545,6 +581,12 @@ def game():
 
 
 while running_program:
+    '''res = con.cursor().execute('SELECT score FROM records').fetchall()
+    kol = 0
+    for i in res:
+        if kol >= 5:
+            break
+        spis_of_scores.append(i)'''
     x_platform, y_platform = WIDTH // 2 - platform_width // 2, HEIGHT - 100
     x_ball, y_ball = WIDTH // 2 - radius, HEIGHT - 100 - 2 * radius
     Border(5, 5, WIDTH - 5, 5)
@@ -553,9 +595,10 @@ while running_program:
     Border(WIDTH - 5, 5, WIDTH - 5, HEIGHT - 5)
     ball = Ball(x_ball, y_ball)
     platform = Platform(x_platform, y_platform, platform_width, platform_height)
-    running = True
+    running = False
     show = True
     flying = False
+    show_statistics = False
     location = []
     kol_hits = 0
     kol_blocks = 0
