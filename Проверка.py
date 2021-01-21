@@ -1,6 +1,7 @@
 import pygame
 import random
 import sqlite3
+import datetime
 
 WIDTH = 1024
 HEIGHT = 720
@@ -32,16 +33,27 @@ sound3.set_volume(0.5)
 sound4 = pygame.mixer.Sound('hit2.wav')
 sound4.set_volume(0.3)
 pygame.mixer.music.load('music.mp3')
-pygame.mixer.music.set_volume(0.01)
+pygame.mixer.music.set_volume(0.1)
 con = sqlite3.connect('pygame.db')
 spis_of_scores = []
+slov_of_scores_and_dates = {}
 number_of_additions = 0
+now = datetime.datetime.now()
 
 
 def print_text(message, x, y, font_color=(0, 0, 0), font_type='PingPong.ttf', font_size=30):
     font_type = pygame.font.Font(font_type, font_size)
     text = font_type.render(message, True, font_color)
     screen.blit(text, (x, y))
+
+
+def download_from_table():
+    global spis_of_scores, slov_of_scores_and_dates
+    res = con.cursor().execute('SELECT * FROM records').fetchall()
+    for i in res:
+        spis_of_scores.append(int(i[0]))
+        slov_of_scores_and_dates[int(i[0])] = i[1]
+    spis_of_scores = sorted(spis_of_scores, reverse=True)
 
 
 def pause():
@@ -106,16 +118,13 @@ def statistics():
             pygame.draw.line(screen, color, (0, (i + 1) * y), (WIDTH, (i + 1) * y), 1)
         for i in range(3):
             pygame.draw.line(screen, color, ((i + 1) * x, 0), ((i + 1) * x, HEIGHT), 1)
-        res = con.cursor().execute('SELECT * FROM records').fetchall()
         kol = 1
-        for i in res:
+        for i in spis_of_scores:
             if kol > 5:
                 break
-            j = 0
-            for k in i:
-                k = str(k)
-                print_text(k, j * x, (kol - 1) * y, (17, 132, 7), font_size=100)
-                j += 1
+            print_text(str(kol), 0, (kol - 1) * y, (17, 132, 7), font_size=100)
+            print_text(str(i), x, (kol - 1) * y, (17, 132, 7), font_size=100)
+            print_text(str(slov_of_scores_and_dates[i]), 2 * x, (kol - 1) * y, (17, 132, 7), font_size=100)
             kol += 1
         pygame.display.flip()
 
@@ -274,12 +283,16 @@ def reset_parameters_for_additions():
 
 def level_1_arrangement():
     global show_selec, running, show, kol_blocks, kol_hits, number_of_additions
+    reset_parameters_for_additions()
     show_selec = False
     running = True
     show = False
     number_of_additions = 1
     for i in range(6):
         for j in range(10):
+            if addition_yes_or_no(number_of_additions) and i != 0 and j != 0:
+                number_of_additions -= 1
+                random_addition(bl, 12 + 100 * j, 10 + 50 * i)
             if i == 0 or i == 1:
                 color = pygame.Color('white')
             elif i == 2 or i == 3:
@@ -288,38 +301,40 @@ def level_1_arrangement():
                 color = pygame.Color('red')
             bl = Block(12 + 100 * j, 10 + 50 * i, block_width, block_height, color)
             kol_blocks += 1
-            if addition_yes_or_no(number_of_additions):
-                number_of_additions -= 1
-                random_addition(bl, 12 + 100 * j, 10 + 50 * i)
 
 
 def level_2_arrangement():
     global show_selec, running, show, kol_blocks, kol_hits, number_of_additions
+    reset_parameters_for_additions()
     show_selec = False
     running = True
     show = False
     number_of_additions = 2
     for i in range(6):
         for j in range(10):
+            if addition_yes_or_no(number_of_additions) and i != 0 and j != 0:
+                number_of_additions -= 1
+                random_addition(bl, 12 + 100 * j, 10 + 50 * i)
             if (i == 1 and j == 1) or (i == 2 and j == 1) or (i == 1 and j == 2) or (i == 2 and j == 2):
                 color = pygame.Color('yellow')
             else:
                 color = pygame.Color('red')
             bl = Block(12 + 100 * j, 10 + 50 * i, block_width, block_height, color)
             kol_blocks += 1
-            if addition_yes_or_no(number_of_additions):
-                number_of_additions -= 1
-                random_addition(bl, 12 + 100 * j, 10 + 50 * i)
 
 
 def level_3_arrangement():
     global show_selec, running, show, kol_blocks, kol_hits, number_of_additions
+    reset_parameters_for_additions()
     show_selec = False
     running = True
     show = False
     number_of_additions = 3
     for i in range(6):
         for j in range(10):
+            if addition_yes_or_no(number_of_additions) and i != 0 and j != 0:
+                number_of_additions -= 1
+                random_addition(bl, 12 + 100 * j, 10 + 50 * i)
             if (i == 0 and j == 0) or (i == 0 and j == 2) or (i == 1 and j == 1) or (i == 2 and j == 0) \
                     or (i == 2 and j == 2):
                 color = pygame.Color('blue')
@@ -335,19 +350,20 @@ def level_3_arrangement():
                 color = pygame.Color('red')
             bl = Block(12 + 100 * j, 10 + 50 * i, block_width, block_height, color)
             kol_blocks += 1
-            if addition_yes_or_no(number_of_additions):
-                number_of_additions -= 1
-                random_addition(bl, 12 + 100 * j, 10 + 50 * i)
 
 
 def level_4_arrangement():
     global show_selec, running, show, kol_blocks, kol_hits, number_of_additions
+    reset_parameters_for_additions()
     show_selec = False
     running = True
     show = False
     number_of_additions = 4
     for i in range(6):
         for j in range(10):
+            if addition_yes_or_no(number_of_additions) and i != 0 and j != 0:
+                number_of_additions -= 1
+                random_addition(bl, 12 + 100 * j, 10 + 50 * i)
             if j == 0 or j == 1 or j == 2 or j == 3:
                 color = pygame.Color('blue')
             elif j == 4 or j == 5 or j == 6:
@@ -356,19 +372,20 @@ def level_4_arrangement():
                 color = pygame.Color('red')
             bl = Block(12 + 100 * j, 10 + 50 * i, block_width, block_height, color)
             kol_blocks += 1
-            if addition_yes_or_no(number_of_additions):
-                number_of_additions -= 1
-                random_addition(bl, 12 + 100 * j, 10 + 50 * i)
 
 
 def level_5_arrangement():
     global show_selec, running, show, kol_blocks, kol_hits, number_of_additions
+    reset_parameters_for_additions()
     show_selec = False
     running = True
     show = False
     number_of_additions = 5
     for i in range(6):
         for j in range(10):
+            if addition_yes_or_no(number_of_additions) and i != 0 and j != 0:
+                number_of_additions -= 1
+                random_addition(bl, 12 + 100 * j, 10 + 50 * i)
             if i == 0 or i == 1:
                 color = pygame.Color('black')
             elif i == 2 or i == 3:
@@ -377,19 +394,20 @@ def level_5_arrangement():
                 color = pygame.Color('yellow')
             bl = Block(12 + 100 * j, 10 + 50 * i, block_width, block_height, color)
             kol_blocks += 1
-            if addition_yes_or_no(number_of_additions):
-                number_of_additions -= 1
-                random_addition(bl, 12 + 100 * j, 10 + 50 * i)
 
 
 def level_6_arrangement():
     global show_selec, running, show, kol_blocks, kol_hits, number_of_additions
+    reset_parameters_for_additions()
     show_selec = False
     running = True
     show = False
     number_of_additions = 6
     for i in range(6):
         for j in range(10):
+            if addition_yes_or_no(number_of_additions) and i != 0 and j != 0:
+                number_of_additions -= 1
+                random_addition(bl, 12 + 100 * j, 10 + 50 * i)
             if i == 0 or i == 5 or j == 0 or j == 9:
                 color = pygame.Color('red')
             elif (i == 2 and 2 <= j <= 7) or (i == 3 and 2 <= j <= 7):
@@ -400,19 +418,20 @@ def level_6_arrangement():
                 color = pygame.Color('yellow')
             bl = Block(12 + 100 * j, 10 + 50 * i, block_width, block_height, color)
             kol_blocks += 1
-            if addition_yes_or_no(number_of_additions):
-                number_of_additions -= 1
-                random_addition(bl, 12 + 100 * j, 10 + 50 * i)
 
 
 def level_7_arrangement():
     global show_selec, running, show, kol_blocks, kol_hits, number_of_additions
+    reset_parameters_for_additions()
     show_selec = False
     running = True
     show = False
     number_of_additions = 7
     for i in range(6):
         for j in range(10):
+            if addition_yes_or_no(number_of_additions) and i != 0 and j != 0:
+                number_of_additions -= 1
+                random_addition(bl, 12 + 100 * j, 10 + 50 * i)
             if i == j or (i == 4 and j == 6) or (i == 3 and j == 7):
                 color = pygame.Color('blue')
             elif (i == 2 and j == 8) or (i == 1 and j == 9):
@@ -421,19 +440,20 @@ def level_7_arrangement():
                 color = pygame.Color('orange')
             bl = Block(12 + 100 * j, 10 + 50 * i, block_width, block_height, color)
             kol_blocks += 1
-            if addition_yes_or_no(number_of_additions):
-                number_of_additions -= 1
-                random_addition(bl, 12 + 100 * j, 10 + 50 * i)
 
 
 def level_8_arrangement():
     global show_selec, running, show, kol_blocks, kol_hits, number_of_additions
+    reset_parameters_for_additions()
     show_selec = False
     running = True
     show = False
     number_of_additions = 8
     for i in range(6):
         for j in range(10):
+            if addition_yes_or_no(number_of_additions) and i != 0 and j != 0:
+                number_of_additions -= 1
+                random_addition(bl, 12 + 100 * j, 10 + 50 * i)
             if (i == 0 or i == 2 or i == 4) and (j % 2 == 0):
                 color = pygame.Color('green')
             elif (i == 1 or i == 3 or i == 5) and (j % 2 != 0):
@@ -442,38 +462,40 @@ def level_8_arrangement():
                 color = pygame.Color('red')
             bl = Block(12 + 100 * j, 10 + 50 * i, block_width, block_height, color)
             kol_blocks += 1
-            if addition_yes_or_no(number_of_additions):
-                number_of_additions -= 1
-                random_addition(bl, 12 + 100 * j, 10 + 50 * i)
 
 
 def level_9_arrangement():
     global show_selec, running, show, kol_blocks, kol_hits, number_of_additions
+    reset_parameters_for_additions()
     show_selec = False
     running = True
     show = False
     number_of_additions = 9
     for i in range(6):
         for j in range(10):
+            if addition_yes_or_no(number_of_additions) and i != 0 and j != 0:
+                number_of_additions -= 1
+                random_addition(bl, 12 + 100 * j, 10 + 50 * i)
             if i == j or i + 5 == j or i == 5 - j or i == 10 - j:
                 color = pygame.Color('purple')
             else:
                 color = pygame.Color('red')
             bl = Block(12 + 100 * j, 10 + 50 * i, block_width, block_height, color)
             kol_blocks += 1
-            if addition_yes_or_no(number_of_additions):
-                number_of_additions -= 1
-                random_addition(bl, 12 + 100 * j, 10 + 50 * i)
 
 
 def level_10_arrangement():
     global show_selec, running, show, kol_blocks, kol_hits, number_of_additions
+    reset_parameters_for_additions()
     show_selec = False
     running = True
     show = False
     number_of_additions = 10
     for i in range(6):
         for j in range(10):
+            if addition_yes_or_no(number_of_additions) and i != 0 and j != 0:
+                number_of_additions -= 1
+                random_addition(bl, 12 + 100 * j, 10 + 50 * i)
             if i == 5 and j % 2 != 0:
                 color = pygame.Color('red')
             elif j + 2 == i or j - 2 == i or 2 - j == i or 6 - j == i or 10 - j == i or j - 6 == i:
@@ -482,9 +504,6 @@ def level_10_arrangement():
                 color = pygame.Color('green')
             bl = Block(12 + 100 * j, 10 + 50 * i, block_width, block_height, color)
             kol_blocks += 1
-            if addition_yes_or_no(number_of_additions):
-                number_of_additions -= 1
-                random_addition(bl, 12 + 100 * j, 10 + 50 * i)
 
 
 additions = pygame.sprite.Group()
@@ -544,9 +563,11 @@ class Ball(pygame.sprite.Sprite):
                     self.vx = 2
                 self.vy = -self.vy
             hits = pygame.sprite.spritecollide(self, blocks, True)
+            for _ in hits:
+                kol_hits += 1
+                points += 10
             if hits:
                 sound1.play()
-                kol_hits += 1
                 if hits[0] in list_of_buttons:
                     addition = list_of_additions[list_of_buttons.index(hits[0])]
                     addition.dropping = True
@@ -563,7 +584,6 @@ class Ball(pygame.sprite.Sprite):
                         + block_height - abs(self.vy) <= y_ball + 2 * radius <= hits[0].y1 \
                         + block_height + abs(self.vy):
                     self.vy = -self.vy
-                points += 10
         pygame.draw.circle(self.image, pygame.Color("red"),
                            (radius, radius), radius)
 
@@ -719,15 +739,16 @@ def game():
         all_sprites.draw(screen)
         pygame.display.flip()
     pygame.display.flip()
+    if points != 0:
+        con.cursor().execute("""INSERT INTO records(score, date) Values(?, ?)""", (points, str(now.day) + '.'
+                                                                                   + str(now.month)))
+        con.commit()
 
 
 while running_program:
-    '''res = con.cursor().execute('SELECT score FROM records').fetchall()
-    kol = 0
-    for i in res:
-        if kol >= 5:
-            break
-        spis_of_scores.append(i)'''
+    spis_of_scores = []
+    slov_of_scores_and_dates = {}
+    download_from_table()
     x_platform, y_platform = WIDTH // 2 - platform_width // 2, HEIGHT - 100
     x_ball, y_ball = WIDTH // 2 - radius, HEIGHT - 100 - 2 * radius
     Border(5, 5, WIDTH - 5, 5)
