@@ -39,6 +39,7 @@ spis_of_scores = []
 slov_of_scores_and_dates = {}
 number_of_additions = 0
 now = datetime.datetime.now()
+num_lvl = 0
 
 
 def print_text(message, x, y, font_color=(0, 0, 0), font_type='PingPong.ttf', font_size=30):
@@ -230,8 +231,8 @@ def random_generate():
 
 
 def create_blocks():
-    global kol_blocks, number_of_additions
-    number_of_additions = 0
+    global kol_blocks, num_lvl
+    num_lvl = 0
     random_generate()
     for i in range(len(location)):
         for j in range(len(location[0])):
@@ -282,12 +283,13 @@ def reset_parameters_for_additions():
 
 
 def level_1_arrangement():
-    global show_selec, running, show, kol_blocks, kol_hits, number_of_additions
+    global show_selec, running, show, kol_blocks, kol_hits, num_lvl
     reset_parameters_for_additions()
     show_selec = False
     running = True
     show = False
     number_of_additions = 1
+    num_lvl = 1
     for i in range(6):
         for j in range(10):
             if addition_yes_or_no(number_of_additions) and i != 0 and j != 0:
@@ -304,12 +306,13 @@ def level_1_arrangement():
 
 
 def level_2_arrangement():
-    global show_selec, running, show, kol_blocks, kol_hits, number_of_additions
+    global show_selec, running, show, kol_blocks, kol_hits, num_lvl
     reset_parameters_for_additions()
     show_selec = False
     running = True
     show = False
     number_of_additions = 2
+    num_lvl = 2
     for i in range(6):
         for j in range(10):
             if addition_yes_or_no(number_of_additions) and i != 0 and j != 0:
@@ -324,12 +327,13 @@ def level_2_arrangement():
 
 
 def level_3_arrangement():
-    global show_selec, running, show, kol_blocks, kol_hits, number_of_additions
+    global show_selec, running, show, kol_blocks, kol_hits, num_lvl
     reset_parameters_for_additions()
     show_selec = False
     running = True
     show = False
     number_of_additions = 3
+    num_lvl = 3
     for i in range(6):
         for j in range(10):
             if addition_yes_or_no(number_of_additions) and i != 0 and j != 0:
@@ -353,12 +357,13 @@ def level_3_arrangement():
 
 
 def level_4_arrangement():
-    global show_selec, running, show, kol_blocks, kol_hits, number_of_additions
+    global show_selec, running, show, kol_blocks, kol_hits, num_lvl
     reset_parameters_for_additions()
     show_selec = False
     running = True
     show = False
     number_of_additions = 4
+    num_lvl = 4
     for i in range(6):
         for j in range(10):
             if addition_yes_or_no(number_of_additions) and i != 0 and j != 0:
@@ -375,12 +380,13 @@ def level_4_arrangement():
 
 
 def level_5_arrangement():
-    global show_selec, running, show, kol_blocks, kol_hits, number_of_additions
+    global show_selec, running, show, kol_blocks, kol_hits, num_lvl
     reset_parameters_for_additions()
     show_selec = False
     running = True
     show = False
     number_of_additions = 5
+    num_lvl = 5
     for i in range(6):
         for j in range(10):
             if addition_yes_or_no(number_of_additions) and i != 0 and j != 0:
@@ -397,12 +403,13 @@ def level_5_arrangement():
 
 
 def level_6_arrangement():
-    global show_selec, running, show, kol_blocks, kol_hits, number_of_additions
+    global show_selec, running, show, kol_blocks, kol_hits, num_lvl
     reset_parameters_for_additions()
     show_selec = False
     running = True
     show = False
     number_of_additions = 6
+    num_lvl = 6
     for i in range(6):
         for j in range(10):
             if addition_yes_or_no(number_of_additions) and i != 0 and j != 0:
@@ -421,12 +428,13 @@ def level_6_arrangement():
 
 
 def level_7_arrangement():
-    global show_selec, running, show, kol_blocks, kol_hits, number_of_additions
+    global show_selec, running, show, kol_blocks, kol_hits, num_lvl
     reset_parameters_for_additions()
     show_selec = False
     running = True
     show = False
     number_of_additions = 7
+    num_lvl = 7
     for i in range(6):
         for j in range(10):
             if addition_yes_or_no(number_of_additions) and i != 0 and j != 0:
@@ -443,12 +451,13 @@ def level_7_arrangement():
 
 
 def level_8_arrangement():
-    global show_selec, running, show, kol_blocks, kol_hits, number_of_additions
+    global show_selec, running, show, kol_blocks, kol_hits, num_lvl
     reset_parameters_for_additions()
     show_selec = False
     running = True
     show = False
     number_of_additions = 8
+    num_lvl = 8
     for i in range(6):
         for j in range(10):
             if addition_yes_or_no(number_of_additions) and i != 0 and j != 0:
@@ -465,12 +474,13 @@ def level_8_arrangement():
 
 
 def level_9_arrangement():
-    global show_selec, running, show, kol_blocks, kol_hits, number_of_additions
+    global show_selec, running, show, kol_blocks, kol_hits, num_lvl
     reset_parameters_for_additions()
     show_selec = False
     running = True
     show = False
     number_of_additions = 9
+    num_lvl = 9
     for i in range(6):
         for j in range(10):
             if addition_yes_or_no(number_of_additions) and i != 0 and j != 0:
@@ -485,12 +495,13 @@ def level_9_arrangement():
 
 
 def level_10_arrangement():
-    global show_selec, running, show, kol_blocks, kol_hits, number_of_additions
+    global show_selec, running, show, kol_blocks, kol_hits, num_lvl
     reset_parameters_for_additions()
     show_selec = False
     running = True
     show = False
     number_of_additions = 10
+    num_lvl = 10
     for i in range(6):
         for j in range(10):
             if addition_yes_or_no(number_of_additions) and i != 0 and j != 0:
@@ -697,26 +708,27 @@ def game():
                     motion = 'STOP'
                 if event.key == pygame.K_p:
                     pause()
+        print(num_lvl)
         if (kol_hits == kol_blocks) and (y_ball > 10 + (50 * 5)):
-            if number_of_additions == 1:
+            if num_lvl == 1:
                 level_2_arrangement()
-            if number_of_additions == 2:
+            if num_lvl == 2:
                 level_3_arrangement()
-            if number_of_additions == 3:
+            if num_lvl == 3:
                 level_4_arrangement()
-            if number_of_additions == 4:
+            if num_lvl == 4:
                 level_5_arrangement()
-            if number_of_additions == 5:
+            if num_lvl == 5:
                 level_6_arrangement()
-            if number_of_additions == 6:
+            if num_lvl == 6:
                 level_7_arrangement()
-            if number_of_additions == 7:
+            if num_lvl == 7:
                 level_8_arrangement()
-            if number_of_additions == 8:
+            if num_lvl == 8:
                 level_9_arrangement()
-            if number_of_additions == 9:
+            if num_lvl == 9:
                 level_10_arrangement()
-            if number_of_additions == 10 or number_of_additions == 0:
+            if num_lvl == 10 or num_lvl == 0:
                 create_blocks()
         if motion == 'LEFT' and x_platform >= 15:
             x_platform -= platform_speed
