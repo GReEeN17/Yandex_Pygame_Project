@@ -97,6 +97,7 @@ class Button:
                     elif action == statistics:
                         show_statistics = True
                         show = False
+                        show_selec = False
                     else:
                         action()
         else:
@@ -708,7 +709,6 @@ def game():
                     motion = 'STOP'
                 if event.key == pygame.K_p:
                     pause()
-        print(num_lvl)
         if (kol_hits == kol_blocks) and (y_ball > 10 + (50 * 5)):
             if num_lvl == 1:
                 level_2_arrangement()
